@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Emoji Battle Gacha</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <!-- Admin Login -->
+    <div id="adminLogin" class="modal">
+        <div class="modal-content auth-box">
+            <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+            <p class="subtitle">Login sebagai administrator</p>
+            <div class="input-group">
+                <i class="fas fa-user-shield"></i>
+                <input type="text" id="adminUsername" placeholder="Admin Username" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="adminPassword" placeholder="Admin Password" required>
+            </div>
+            <button class="btn-primary" onclick="adminLogin()">
+                <i class="fas fa-sign-in-alt"></i> Login Admin
+            </button>
+            <p class="error-msg" id="adminError"></p>
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali ke Game
+            </a>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden">
+        <!-- Admin Header -->
+        <header class="admin-header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Admin Panel</span>
+            </div>
+            <div class="admin-actions">
+                <div class="notification-bell" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notifBadge">0</span>
+                </div>
+                <button class="btn-secondary" onclick="backupData()">
+                    <i class="fas fa-download"></i> Backup Data
+                </button>
+                <button class="btn-logout" onclick="adminLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <nav class="admin-nav">
+                    <button class="admin-nav-btn active" onclick="showAdminSection('overview')">
+                        <i class="fas fa-chart-line"></i> Overview
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('users')">
+                        <i class="fas fa-users"></i> Pengguna
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('topup')">
+                        <i class="fas fa-credit-card"></i> Top Up Requests
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('cards')">
+                        <i class="fas fa-layer-group"></i> Kartu Emoji
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('battles')">
+                        <i class="fas fa-bolt"></i> Riwayat Pertarungan
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('chat')">
+                        <i class="fas fa-comments"></i> Moderasi Chat
+                    </button>
+                    <button class="admin-nav-btn" onclick="showAdminSection('settings')">
+                        <i class="fas fa-cog"></i> Pengaturan
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Admin Main Content -->
+            <main class="admin-main">
+                <!-- Overview Section -->
+                <section id="adminOverview" class="admin-section active">
+                    <h2><i class="fas fa-chart-line"></i> Overview</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <i class="fas fa-users"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalUsers">0</span>
+                                <span class="stat-label">Total Pengguna</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-user-check"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="activeUsers">0</span>
+                                <span class="stat-label">Pengguna Aktif</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-layer-group"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalCardsAll">0</span>
+                                <span class="stat-label">Total Kartu</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-bolt"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalBattles">0</span>
+                                <span class="stat-label">Total Pertarungan</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-dice"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalGacha">0</span>
+                                <span class="stat-label">Total Gacha</span>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <i class="fas fa-coins"></i>
+                            <div class="stat-info">
+                                <span class="stat-number" id="totalTopup">0</span>
+                                <span class="stat-label">Top Up Pending</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-cards">
+                        <div class="admin-card">
+                            <h3><i class="fas fa-trophy"></i> Top Players</h3>
+                            <div id="topPlayersList" class="top-list"></div>
+                        </div>
+                        <div class="admin-card">
+                            <h3><i class="fas fa-clock"></i> Aktivitas Terbaru</h3>
+                            <div id="recentActivityList" class="activity-list-admin"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section id="adminUsers" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-users"></i> Manajemen Pengguna</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="userSearch" placeholder="Cari pengguna..." onkeyup="searchUsers()">
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Koin</th>
+                                    <th>Gem</th>
+                                    <th>Kartu</th>
+                                    <th>Menang</th>
+                                    <th>Status Akun</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Top Up Requests Section -->
+                <section id="adminTopup" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-credit-card"></i> Permintaan Top Up</h2>
+                        <button class="btn-secondary" onclick="refreshTopupList()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="topup-tabs">
+                        <button class="tab-btn active" onclick="filterTopup('pending')">Pending</button>
+                        <button class="tab-btn" onclick="filterTopup('approved')">Disetujui</button>
+                        <button class="tab-btn" onclick="filterTopup('rejected')">Ditolak</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Username</th>
+                                    <th>Jenis</th>
+                                    <th>Jumlah</th>
+                                    <th>Harga</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topupTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Cards Section -->
+                <section id="adminCards" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-layer-group"></i> Manajemen Kartu</h2>
+                        <button class="btn-primary" onclick="showAddCardModal()">
+                            <i class="fas fa-plus"></i> Tambah Kartu
+                        </button>
+                    </div>
+
+                    <div class="card-management">
+                        <div class="rarity-filter">
+                            <button class="filter-btn active" onclick="filterAdminCards('all')">Semua</button>
+                            <button class="filter-btn" onclick="filterAdminCards('common')">Common</button>
+                            <button class="filter-btn" onclick="filterAdminCards('uncommon')">Uncommon</button>
+                            <button class="filter-btn" onclick="filterAdminCards('rare')">Rare</button>
+                            <button class="filter-btn" onclick="filterAdminCards('epic')">Epic</button>
+                            <button class="filter-btn" onclick="filterAdminCards('legendary')">Legendary</button>
+                        </div>
+
+                        <div id="adminCardGrid" class="admin-card-grid"></div>
+                    </div>
+                </section>
+
+                <!-- Battles Section -->
+                <section id="adminBattles" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-bolt"></i> Riwayat Pertarungan</h2>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Pemain</th>
+                                    <th>Lawan</th>
+                                    <th>Hasil</th>
+                                    <th>Hadiah</th>
+                                </tr>
+                            </thead>
+                            <tbody id="battlesTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Chat Moderation Section -->
+                <section id="adminChat" class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-comments"></i> Moderasi Chat</h2>
+                        <button class="btn-danger" onclick="clearAllChat()">
+                            <i class="fas fa-trash"></i> Hapus Semua Chat
+                        </button>
+                    </div>
+
+                    <div class="chat-moderation">
+                        <div id="chatHistory" class="chat-history-admin"></div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="adminSettings" class="admin-section">
+                    <h2><i class="fas fa-cog"></i> Pengaturan Game</h2>
+
+                    <div class="settings-grid">
+                        <div class="setting-card">
+                            <h3><i class="fas fa-dice"></i> Gacha Rates</h3>
+                            <div class="setting-item">
+                                <label>Common Rate (%)</label>
+                                <input type="number" id="commonRate" value="50" min="0" max="100">
+                            </div>
+                            <div class="setting-item">
+                                <label>Uncommon Rate (%)</label>
+                                <input type="number" id="uncommonRate" value="30" min="0" max="100">
+                            </div>
+                            <div class="setting-item">
+                                <label>Rare Rate (%)</label>
+                                <input type="number" id="rareRate" value="15" min="0" max="100">
+                            </div>
+                            <div class="setting-item">
+                                <label>Epic Rate (%)</label>
+                                <input type="number" id="epicRate" value="4" min="0" max="100">
+                            </div>
+                            <div class="setting-item">
+                                <label>Legendary Rate (%)</label>
+                                <input type="number" id="legendaryRate" value="1" min="0" max="100">
+                            </div>
+                            <button class="btn-primary" onclick="saveGachaRates()">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+
+                        <div class="setting-card">
+                            <h3><i class="fas fa-coins"></i> Starting Resources</h3>
+                            <div class="setting-item">
+                                <label>Koin Awal</label>
+                                <input type="number" id="startingCoins" value="1000" min="0">
+                            </div>
+                            <div class="setting-item">
+                                <label>Gem Awal</label>
+                                <input type="number" id="startingGems" value="100" min="0">
+                            </div>
+                            <button class="btn-primary" onclick="saveStartingResources()">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+
+                        <div class="setting-card">
+                            <h3><i class="fas fa-bolt"></i> Battle Settings</h3>
+                            <div class="setting-item">
+                                <label>Koin Menang</label>
+                                <input type="number" id="winCoins" value="50" min="0">
+                            </div>
+                            <div class="setting-item">
+                                <label>XP Menang</label>
+                                <input type="number" id="winExp" value="20" min="0">
+                            </div>
+                            <div class="setting-item">
+                                <label>Koin Kalah</label>
+                                <input type="number" id="loseCoins" value="10" min="0">
+                            </div>
+                            <button class="btn-primary" onclick="saveBattleSettings()">
+                                <i class="fas fa-save"></i> Simpan
+                            </button>
+                        </div>
+
+                        <div class="setting-card danger">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Zona Berbahaya</h3>
+                            <p class="warning-text">Tindakan ini tidak dapat dibatalkan!</p>
+                            <button class="btn-danger" onclick="resetAllData()">
+                                <i class="fas fa-trash"></i> Reset Semua Data
+                            </button>
+                            <button class="btn-danger" onclick="clearAllUsers()">
+                                <i class="fas fa-user-times"></i> Hapus Semua Pengguna
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="modal hidden">
+        <div class="modal-content notifications-panel">
+            <div class="notifications-header">
+                <h3><i class="fas fa-bell"></i> Notifikasi</h3>
+                <button class="btn-close" onclick="closeNotifications()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="notificationsList" class="notifications-list"></div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal hidden">
+        <div class="modal-content user-edit">
+            <h3><i class="fas fa-user-edit"></i> Edit Pengguna</h3>
+            <input type="hidden" id="editTargetUser">
+            
+            <div class="user-info-display">
+                <p><strong>Username:</strong> <span id="editUserName"></span></p>
+                <p><strong>Email:</strong> <span id="editUserEmail"></span></p>
+            </div>
+
+            <div class="form-group">
+                <label>Koin</label>
+                <div class="input-with-btn">
+                    <input type="number" id="editUserCoins" min="0">
+                    <button class="btn-small" onclick="adjustCurrency('coins', 100)">+100</button>
+                    <button class="btn-small" onclick="adjustCurrency('coins', 1000)">+1K</button>
+                    <button class="btn-small" onclick="adjustCurrency('coins', -100)">-100</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Gem</label>
+                <div class="input-with-btn">
+                    <input type="number" id="editUserGems" min="0">
+                    <button class="btn-small" onclick="adjustCurrency('gems', 10)">+10</button>
+                    <button class="btn-small" onclick="adjustCurrency('gems', 100)">+100</button>
+                    <button class="btn-small" onclick="adjustCurrency('gems', -10)">-10</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Status Akun</label>
+                <select id="editUserStatus">
+                    <option value="active">Aktif</option>
+                    <option value="suspended">Suspend (Sementara)</option>
+                    <option value="banned">Banned (Permanen)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Alasan Status (untuk suspend/ban)</label>
+                <textarea id="editUserReason" rows="2" placeholder="Masukkan alasan..."></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeEditUserModal()">Batal</button>
+                <button class="btn-primary" onclick="saveUserEdit()">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Card Modal -->
+    <div id="cardEditModal" class="modal hidden">
+        <div class="modal-content card-edit">
+            <h3 id="cardModalTitle"><i class="fas fa-plus"></i> Tambah Kartu</h3>
+            <div class="form-group">
+                <label>Emoji</label>
+                <input type="text" id="cardEmoji" placeholder="🎲" maxlength="2">
+            </div>
+            <div class="form-group">
+                <label>Nama Kartu</label>
+                <input type="text" id="cardName" placeholder="Nama kartu...">
+            </div>
+            <div class="form-group">
+                <label>Rarity</label>
+                <select id="cardRarity">
+                    <option value="common">Common</option>
+                    <option value="uncommon">Uncommon</option>
+                    <option value="rare">Rare</option>
+                    <option value="epic">Epic</option>
+                    <option value="legendary">Legendary</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>HP</label>
+                    <input type="number" id="cardHp" value="100" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Attack</label>
+                    <input type="number" id="cardAttack" value="20" min="1">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Defense</label>
+                    <input type="number" id="cardDefense" value="10" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Speed</label>
+                    <input type="number" id="cardSpeed" value="10" min="1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea id="cardDesc" rows="3" placeholder="Deskripsi kartu..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeCardEditModal()">Batal</button>
+                <button class="btn-primary" onclick="saveCard()">
+                    <i class="fas fa-save"></i> Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Detail Modal -->
+    <div id="userDetailModal" class="modal hidden">
+        <div class="modal-content user-detail">
+            <button class="btn-close" onclick="closeUserDetailModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div id="userDetailContent"></div>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
