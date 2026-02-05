@@ -11,7 +11,7 @@
 // Anda perlu mendapatkan API Key dari https://jsonbin.io/
 // Daftar gratis dan dapatkan API Key Anda
 const JSONBIN_CONFIG = {
-    apiKey: '$2a$10$YourJsonBinApiKeyHere', // Ganti dengan API Key Anda
+    apiKey: '$2a$10$YMA/Z8JwPGoowCYYwDqK3ugpbCqXjvcwlmGyXGxr9tW1gsh8aFgjm', // Ganti dengan API Key Anda
     baseUrl: 'https://api.jsonbin.io/v3/b',
     // Bin IDs untuk menyimpan data berbeda
     bins: {
