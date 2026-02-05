@@ -8,8 +8,8 @@
 // CONFIGURATION
 // ========================================
 
-const SUPABASE_URL = 'https://aadhzahxymstejehgzjp.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhZGh6YWh4eW1zdGVqZWhnempwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyNTYwODUsImV4cCI6MjA4NTgzMjA4NX0.fqgNc13UjPYprjSJMk2h0O6pN1Dum9yUjhiDdUqh9OY';
+const SUPABASE_URL = 'https://szbuzjqvnqelylmuvljo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YnV6anF2bnFlbHlsbXV2bGpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyODAyNzcsImV4cCI6MjA4NTg1NjI3N30.ZdQ-snWi51ifs-cCWArQMaspYHYKsOORvE4FQnBV1ak';
 
 // ========================================
 // INITIALIZE SUPABASE
@@ -23,7 +23,7 @@ function initSupabase() {
         return false;
     }
     
-    if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhZGh6YWh4eW1zdGVqZWhnempwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyNTYwODUsImV4cCI6MjA4NTgzMjA4NX0.fqgNc13UjPYprjSJMk2h0O6pN1Dum9yUjhiDdUqh9OY') {
+    if (!SUPABASE_ANON_KEY || SUPABASE_ANON_KEY === 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6YnV6anF2bnFlbHlsbXV2bGpvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyODAyNzcsImV4cCI6MjA4NTg1NjI3N30.ZdQ-snWi51ifs-cCWArQMaspYHYKsOORvE4FQnBV1ak') {
         console.warn('Supabase anon key not configured');
         return false;
     }
